@@ -1,7 +1,14 @@
-export type OccurrenceSeverity =
-  | "low"
-  | "medium"
-  | "high";
+export interface OccurrenceImage {
+  id: number;
+  name: string;
+  path: string;
+  url: string;
+}
+
+export interface OccurrenceUser {
+  id: number;
+  name: string;
+}
 
 export interface Occurrence {
   id: number;
@@ -9,5 +16,10 @@ export interface Occurrence {
   description: string;
   occurred_at: string;
   severity: OccurrenceSeverity;
-  images?: number;
+  images: OccurrenceImage[];
 }
+
+export type OccurrenceSeverity =
+  | "low"
+  | "medium"
+  | "high";
