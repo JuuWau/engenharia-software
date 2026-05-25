@@ -15,7 +15,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { index } from '@/routes/occurrences';
+import routes from '@/routes/occurrences';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -26,7 +26,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Ocorrências',
-        href: index(),
+        href: routes.occurrences.index(),
         icon: NotepadText,
     },
 ];
