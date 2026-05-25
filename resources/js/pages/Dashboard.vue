@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import { ShieldCheck, BellRing, FileWarning, ArrowRight } from "lucide-vue-next";
 
 import { dashboard } from "@/routes";
@@ -44,16 +44,12 @@ defineOptions({
 
         <div class="flex flex-wrap gap-3 pt-2">
           <button
+            @click="router.visit('/occurrences')"
             class="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 font-medium text-indigo-600 transition hover:bg-white/90"
           >
             Nova ocorrência
-            <ArrowRight class="size-4" />
-          </button>
 
-          <button
-            class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-5 py-2.5 font-medium backdrop-blur transition hover:bg-white/20"
-          >
-            Ver relatórios
+            <ArrowRight class="size-4" />
           </button>
         </div>
       </div>
