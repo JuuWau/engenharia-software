@@ -38,6 +38,8 @@
         "@inertiajs/vue3": "^3.0.0",
         "@tanstack/vue-table": "^8.21.3",
         "@vueuse/core": "^12.8.2",
+        "ag-grid-community": "^35.3.0",
+        "ag-grid-vue3": "^35.3.0",
         "axios": "^1.16.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
