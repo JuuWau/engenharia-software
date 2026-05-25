@@ -1,14 +1,30 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
-import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue';
-import DropdownMenuContent from '@/components/ui/dropdown-menu/DropdownMenuContent.vue';
-import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue';
-import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue';
+import { PencilIcon, X } from "lucide-vue-next";
+import Button from "@/components/ui/button/Button.vue";
+import DropdownMenu from "@/components/ui/dropdown-menu/DropdownMenu.vue";
+import DropdownMenuContent from "@/components/ui/dropdown-menu/DropdownMenuContent.vue";
+import DropdownMenuItem from "@/components/ui/dropdown-menu/DropdownMenuItem.vue";
+import DropdownMenuTrigger from "@/components/ui/dropdown-menu/DropdownMenuTrigger.vue";
 
-defineEmits<{
-  edit: [];
-  delete: [];
+const props = defineProps<{
+  params: {
+    data: any;
+    onEdit: (item: any) => void;
+    onDelete: (item: any) => void;
+  };
 }>();
+
+function handleEdit() {
+  props.params.onEdit(
+    props.params.data
+  );
+}
+
+function handleDelete() {
+  props.params.onDelete(
+    props.params.data
+  );
+}
 </script>
 
 <template>
@@ -24,15 +40,15 @@ defineEmits<{
 
     <DropdownMenuContent>
       <DropdownMenuItem
-        @click="$emit('edit')"
+        @click="handleEdit"
       >
+      <PencilIcon class="h-4 w-4" />
         Editar
       </DropdownMenuItem>
-
       <DropdownMenuItem
-        class="text-red-500"
-        @click="$emit('delete')"
+        @click="handleDelete"
       >
+        <X class="h-4 w-4" />
         Excluir
       </DropdownMenuItem>
     </DropdownMenuContent>

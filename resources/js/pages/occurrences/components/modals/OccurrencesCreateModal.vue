@@ -70,6 +70,14 @@ async function handleSubmit() {
       },
     });
 
+    Object.assign(form, {
+      title: "",
+      description: "",
+      occurred_at: "",
+      severity: "medium",
+      images: [],
+    });
+
     open.value = false;
   }
   catch (error) {

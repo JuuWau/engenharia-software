@@ -17,16 +17,33 @@ const form = defineModel<OccurrenceFormData>({
 });
 
 const props = defineProps<{
-  errors?: Record<string, string>
+  errors?: Record<string, string>,
+  existingImages?: {
+    id: number;
+    url: string;
+  }[];
 }>();
 
-const imagePreviews = computed(() => {
-  if (!form.value.images?.length) return [];
+const emit = defineEmits<{
+  removeExistingImage: [index: number];
+}>();
 
-  return form.value.images.map((file) => ({
-    file,
-    url: URL.createObjectURL(file),
-  }));
+const allImages = computed(() => {
+  const existing =
+    props.existingImages?.map((image) => ({
+      type: "existing" as const,
+      image,
+      url: image.url,
+    }))
+
+  const uploaded =
+    form.value.images?.map((file) => ({
+      type: "new" as const,
+      file,
+      url: URL.createObjectURL(file),
+    })) ?? [];
+
+  return [...existing, ...uploaded];
 });
 
 function handleImages(event: Event) {
@@ -42,10 +59,28 @@ function handleImages(event: Event) {
   ].slice(0, 10);
 }
 
-function removeImage(index: number) {
-  if (!form.value.images) return;
+function removeImage(
+  image: (typeof allImages.value)[0],
+  index: number
+) {
 
-  form.value.images.splice(index, 1);
+  if (image.type === "existing") {
+
+    emit(
+      "removeExistingImage",
+      index
+    );
+
+    return;
+  }
+
+  const existingLength =
+    props.existingImages?.length ?? 0;
+
+  form.value.images.splice(
+    index - existingLength,
+    1
+  );
 }
 </script>
 
@@ -144,22 +179,27 @@ function removeImage(index: number) {
       </p>
 
       <p class="text-muted-foreground text-sm">
-        {{ form.images?.length || 0 }}/10 imagens
+        {{
+          (existingImages?.length ?? 0)
+          + (form.images?.length ?? 0)
+        }}/10 imagens
       </p>
 
       <div
-        v-if="imagePreviews.length"
+        v-if="allImages.length"
         class="grid max-h-[320px] grid-cols-2 gap-4 overflow-y-auto pt-2 md:grid-cols-4"
       >
         <div
-          v-for="(image, index) in imagePreviews"
+          v-for="(image, index) in allImages"
           :key="image.url"
           class="relative overflow-visible rounded-md"
         >
           <button
             type="button"
             class="absolute -top-2 -right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full  bg-red-500 text-sm text-white shadow-md transition hover:bg-red-600 hover:scale-105"
-            @click="removeImage(index)"
+            @click="
+              removeImage(image, index)
+            "
           >
             ×
           </button>
@@ -167,7 +207,7 @@ function removeImage(index: number) {
           <div class="overflow-hidden rounded-md border">
             <img
               :src="image.url"
-              :alt="image.file.name"
+              :alt="`Imagem ${index + 1}`"
               class="h-32 w-full object-cover"
             >
           </div>
