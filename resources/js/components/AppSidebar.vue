@@ -15,7 +15,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import routes from '@/routes/occurrences';
+import diaryRoutes from '@/routes/diary';
+import occurrenceRoutes from '@/routes/occurrences';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -26,8 +27,13 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Ocorrências',
-        href: routes.occurrences.index(),
+        href: occurrenceRoutes.occurrences.index(),
         icon: NotepadText,
+    },
+    {
+        title: 'Diário',
+        href: diaryRoutes.diary.index(),
+        icon: BookOpen,
     },
 ];
 
