@@ -2,6 +2,8 @@
 import axios from "axios";
 import { Save, X } from "lucide-vue-next";
 import { inject, reactive, ref } from "vue";
+import type { Ref } from "vue";
+import { toast } from "vue3-toastify";
 import Button from "@/components/ui/button/Button.vue";
 import Dialog from "@/components/ui/dialog/Dialog.vue";
 import DialogContent from "@/components/ui/dialog/DialogContent.vue";
@@ -13,6 +15,7 @@ import { LoadingKey } from "@/components/ui/loading/keys/loadingKey";
 import {
   occurrenceSchema,
 } from "../../schemas/occurrence.schema";
+import type { Occurrence } from "../../types/occurrence.types";
 import OccurrenceForm from "../form/OccurrenceForm.vue";
 
 const loading = inject(LoadingKey, ref(false));
@@ -22,6 +25,11 @@ const errors = reactive<Record<string, string>>({});
 const open = defineModel<boolean>({
   required: true,
 });
+
+const occurrences =
+  inject<Ref<Occurrence[]>>(
+    "occurrences"
+  );
 
 const form = reactive({
   title: "",
@@ -64,11 +72,31 @@ async function handleSubmit() {
       data.append("images[]", image);
     });
 
-    await axios.post("/occurrences", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axios.post(
+      "/occurrences",
+      data,
+      {
+        headers: {
+          "Content-Type":
+            "multipart/form-data",
+        },
+      }
+    );
+
+    toast.success(
+      response.data.message
+    );
+
+    const newOccurrence =
+      response.data.data;
+
+    occurrences?.value.unshift(
+      newOccurrence
+    );
+
+    occurrences!.value = [
+      ...occurrences!.value
+    ];
 
     Object.assign(form, {
       title: "",

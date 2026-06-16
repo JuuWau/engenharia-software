@@ -24,6 +24,13 @@ const props = defineProps<{
   }[];
 }>();
 
+const totalImages = computed(() => {
+  return (
+    (props.existingImages?.length ?? 0) +
+    (form.value.images?.length ?? 0)
+  );
+});
+
 const emit = defineEmits<{
   removeExistingImage: [index: number];
 }>();
@@ -34,7 +41,7 @@ const allImages = computed(() => {
       type: "existing" as const,
       image,
       url: image.url,
-    }))
+    })) ?? [];
 
   const uploaded =
     form.value.images?.map((file) => ({
@@ -179,10 +186,7 @@ function removeImage(
       </p>
 
       <p class="text-muted-foreground text-sm">
-        {{
-          (existingImages?.length ?? 0)
-          + (form.images?.length ?? 0)
-        }}/10 imagens
+          {{ totalImages }}/10 imagens
       </p>
 
       <div
