@@ -9,6 +9,7 @@ import {
   watch,
 } from "vue";
 import type { Ref } from "vue";
+import { toast } from "vue3-toastify";
 import Button from "@/components/ui/button/Button.vue";
 import Dialog from "@/components/ui/dialog/Dialog.vue";
 import DialogContent from "@/components/ui/dialog/DialogContent.vue";
@@ -84,6 +85,42 @@ watch(
   { immediate: true }
 );
 
+watch(open, (value) => {
+  if (!value) {
+    Object.keys(errors).forEach(
+      (key) => {
+        delete errors[key];
+      }
+    );
+
+    if (selectedOccurrence?.value) {
+      Object.assign(form, {
+        title:
+          selectedOccurrence.value.title,
+
+        description:
+          selectedOccurrence.value
+            .description,
+
+        occurred_at:
+          selectedOccurrence.value
+            .occurred_at
+            ?.split(" ")[0],
+
+        severity:
+          selectedOccurrence.value
+            .severity,
+
+        images: [],
+      });
+
+      existingImages.value =
+        selectedOccurrence.value
+          .images;
+    }
+  }
+});
+
 async function handleSubmit() {
   if (
     !loading ||
@@ -120,7 +157,10 @@ async function handleSubmit() {
 
     const data = new FormData();
 
-    data.append("title", form.title);
+    data.append(
+      "title",
+      form.title
+    );
 
     data.append(
       "description",
@@ -137,38 +177,42 @@ async function handleSubmit() {
       form.severity
     );
 
-    existingImages.value.forEach(
+    existingImages.value.forEach((image) => {
+      data.append(
+        "existing_images[]",
+        String(image.id)
+      );
+    });
+
+    form.images.forEach(
       (image) => {
         data.append(
-          "existing_images[]",
-          image.id.toString()
+          "images[]",
+          image
         );
       }
     );
 
-    form.images.forEach((image) => {
-      data.append(
-        "images[]",
-        image
+    const response =
+      await axios.put(
+        `/occurrences/${selectedOccurrence.value.id}`,
+        data,
+        {
+          headers: {
+            "Content-Type":
+              "multipart/form-data",
+          },
+        }
       );
-    });
 
-    const response = await axios.put(
-      `/occurrences/${selectedOccurrence.value.id}`,
-      data,
-      {
-        headers: {
-          "Content-Type":
-            "multipart/form-data",
-        },
-      }
+    toast.success(
+      response.data.message
     );
 
     const updatedOccurrence =
       response.data.data;
 
     if (occurrences?.value) {
-
       const index =
         occurrences.value.findIndex(
           (item) =>
@@ -177,7 +221,6 @@ async function handleSubmit() {
         );
 
       if (index !== -1) {
-
         occurrences.value[index] =
           updatedOccurrence;
 
@@ -189,8 +232,13 @@ async function handleSubmit() {
 
     open.value = false;
   }
-  catch (error) {
+  catch (error: any) {
     console.error(error);
+
+    toast.error(
+      error.response?.data?.message ||
+      "Erro ao atualizar ocorrência."
+    );
   }
   finally {
     loading.value = false;
@@ -214,6 +262,7 @@ async function handleSubmit() {
 
       <OccurrenceForm
         v-model="form"
+        :errors="errors"
         :existing-images="existingImages"
         @remove-existing-image="
           existingImages.splice($event, 1)

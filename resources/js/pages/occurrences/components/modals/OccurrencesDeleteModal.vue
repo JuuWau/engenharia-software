@@ -3,6 +3,7 @@ import axios from "axios";
 import { Trash2, X, } from "lucide-vue-next";
 import { inject, ref, } from "vue";
 import type { Ref } from "vue";
+import { toast } from "vue3-toastify";
 import AlertDialog from "@/components/ui/alert-dialog/AlertDialog.vue";
 import AlertDialogAction from "@/components/ui/alert-dialog/AlertDialogAction.vue";
 import AlertDialogCancel from "@/components/ui/alert-dialog/AlertDialogCancel.vue";
@@ -58,14 +59,23 @@ async function handleDelete() {
           selectedOccurrence.value?.id
       );
 
+    toast.success(
+      "Ocorrência excluída com sucesso."
+    );
+
     open.value = false;
 
     selectedOccurrence.value =
       null;
 
-  } catch (error) {
+  } catch (error: any) {
 
     console.error(error);
+
+    toast.error(
+      error.response?.data?.message ||
+      "Erro ao excluir ocorrência."
+    );
 
   } finally {
 
