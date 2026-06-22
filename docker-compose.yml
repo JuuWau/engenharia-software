@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/app/Dockerfile
 
     container_name: safevoice_app
 
@@ -31,14 +31,17 @@ services:
   postgres:
     image: postgres:16
 
+    ports:
+    - "5433:5432"
+
     container_name: safevoice_db
 
     restart: unless-stopped
 
     environment:
-      POSTGRES_DB: safe_voice
-      POSTGRES_USER: safevoice
-      POSTGRES_PASSWORD: SafeVoice2026!
+      POSTGRES_DB: safe_voice_db
+      POSTGRES_USER: safevoice_user
+      POSTGRES_PASSWORD: safevoice_pass
 
     volumes:
       - postgres_data:/var/lib/postgresql/data

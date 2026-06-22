@@ -1,4 +1,4 @@
-
+#!/bin/sh
 
 echo "Aguardando PostgreSQL..."
 

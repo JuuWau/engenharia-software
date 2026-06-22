@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.4-cli
 
 WORKDIR /var/www/html
 
@@ -7,15 +7,10 @@ RUN apt-get update && apt-get install -y \
     curl \
     zip \
     unzip \
-    nodejs \
-    npm \
     libzip-dev \
     libpq-dev \
     postgresql-client \
-    && docker-php-ext-install \
-        pdo_pgsql \
-        pgsql \
-        zip
+    && docker-php-ext-install pdo_pgsql pgsql zip
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -23,16 +18,16 @@ COPY . .
 
 RUN composer install --no-interaction --prefer-dist
 
-RUN npm install
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
 
-RUN npm run build
+RUN npm install && npm run build
 
 RUN chmod -R 775 storage bootstrap/cache
 
 COPY docker/app/entrypoint.dev.sh /usr/local/bin/entrypoint.sh
-
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-EXPOSE 8001
+EXPOSE 8000
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
