@@ -28,7 +28,7 @@ defineEmits<{
 
     <Button
       variant="indigo"
-      class="w-full sm:w-auto"
+      class="w-full sm:w-auto cursor-pointer"
       @click="$emit('create')"
     >
       <Plus class="h-4 w-4" />

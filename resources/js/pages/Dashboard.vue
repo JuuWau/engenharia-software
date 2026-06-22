@@ -45,7 +45,7 @@ defineOptions({
         <div class="flex flex-wrap gap-3 pt-2">
           <button
             @click="router.visit('/occurrences')"
-            class="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 font-medium text-indigo-600 transition hover:bg-white/90"
+            class="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 font-medium text-indigo-600 transition hover:bg-white/90 cursor-pointer"
           >
             Nova ocorrência
 

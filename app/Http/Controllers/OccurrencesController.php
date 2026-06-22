@@ -22,7 +22,12 @@ class OccurrencesController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('occurrences/OccurrencesIndex', ['occurrences' => $this->occurrenceService->index()]);
+        return Inertia::render(
+            'occurrences/OccurrencesIndex',
+            [
+                'occurrences' => $this->occurrenceService->index(),
+            ]
+        );
     }
 
     public function store(StoreOccurrenceRequest $request): JsonResponse 
