@@ -1,0 +1,54 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: safevoice_app
+
+    restart: unless-stopped
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: safe_voice_db
+      DB_USERNAME: safevoice_user
+      DB_PASSWORD: safevoice_pass
+
+    depends_on:
+      - postgres
+
+    networks:
+      - safevoice-network
+
+  postgres:
+    image: postgres:16
+
+    container_name: safevoice_db
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: safe_voice
+      POSTGRES_USER: safevoice
+      POSTGRES_PASSWORD: SafeVoice2026!
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - safevoice-network
+
+volumes:
+  postgres_data:
+
+networks:
+  safevoice-network:
+    driver: bridge

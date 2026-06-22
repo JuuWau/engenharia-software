@@ -1,0 +1,38 @@
+FROM php:8.3-cli
+
+WORKDIR /var/www/html
+
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    zip \
+    unzip \
+    nodejs \
+    npm \
+    libzip-dev \
+    libpq-dev \
+    postgresql-client \
+    && docker-php-ext-install \
+        pdo_pgsql \
+        pgsql \
+        zip
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY . .
+
+RUN composer install --no-interaction --prefer-dist
+
+RUN npm install
+
+RUN npm run build
+
+RUN chmod -R 775 storage bootstrap/cache
+
+COPY docker/app/entrypoint.dev.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 8001
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
