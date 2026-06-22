@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -28,6 +30,9 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        app()->setLocale('pt_BR');
+        date_default_timezone_set('America/Sao_Paulo');
+
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
