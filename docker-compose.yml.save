@@ -3,52 +3,59 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
+    
     volumes:
-      - .:/var/www/html
+    - .:/var/www/html
+
+    container_name: safevoice_app
+
+    restart: unless-stopped
+
     ports:
       - "8000:8000"
+
     environment:
-      APP_ENV: local
-      APP_DEBUG: "true"
+      APP_ENV: production
+      APP_DEBUG: "false"
+
       DB_CONNECTION: pgsql
-      DB_HOST: postgres
+      DB_HOST: safevoice_db
       DB_PORT: 5432
       DB_DATABASE: safe_voice_db
       DB_USERNAME: safevoice_user
       DB_PASSWORD: safevoice_pass
+
     depends_on:
       - postgres
+
     networks:
       - safevoice-network
 
   postgres:
     image: postgres:16
+
     ports:
-      - "5433:5432"
+    - "5433:5432"
+
+    container_name: safevoice_db
+
+    restart: unless-stopped
+
     environment:
       POSTGRES_DB: safe_voice_db
       POSTGRES_USER: safevoice_user
       POSTGRES_PASSWORD: safevoice_pass
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     networks:
       - safevoice-network
 
-  node:
-    image: node:22
-    container_name: safevoice_node_dev
-    working_dir: /var/www/html
-    volumes:
-      - .:/var/www/html
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
-    ports:
-      - "5173:5173"
-    networks:
-      - safevoice-network
+volumes:
+  postgres_data:
 
 networks:
   safevoice-network:
     driver: bridge
 
-volumes:
-  postgres_data:

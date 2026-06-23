@@ -12,6 +12,7 @@ class OccurrencesService
     public function index()
     {
         $occurrences = Occurrence::query()
+            ->where('user_id', auth()->id())
             ->with([
                 'images',
                 'user',
@@ -51,8 +52,8 @@ class OccurrencesService
                     ]);
                 }
             }
-
-            return $occurrence;
+            
+            return $occurrence->load(['images', 'user']);
         });
     }
 

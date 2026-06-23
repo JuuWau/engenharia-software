@@ -38,7 +38,6 @@ class OccurrencesController extends Controller
             return response()->json([
                 'message' =>
                 'Ocorrência criada com sucesso.',
-
                 'data' => new OccurrenceResource($occurrence),
             ], 201);
 

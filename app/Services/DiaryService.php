@@ -24,7 +24,6 @@ class DiaryService
         {
                 return DB::transaction(
                         function () use ($data) {
-
                                 $entry = DiaryEntry::query()
                                         ->where('user_id', auth()->id())
                                         ->whereDate(
@@ -35,8 +34,8 @@ class DiaryService
 
                                 if ($entry) {
                                         $entry->update([
-                                                'title' => $data['title'],
-                                                'content' => $data['content'],
+                                                'title' => $data['title'] ?? null,
+                                                'content' => $data['content'] ?? null,
                                                 'mood' => $data['mood'] ?? null,
                                         ]);
 
@@ -45,7 +44,7 @@ class DiaryService
 
                                 return DiaryEntry::create([
                                         'user_id' => auth()->id(),
-                                        'title' => $data['title'],
+                                        'title' => $data['title'] ?? null,
                                         'content' => $data['content'],
                                         'entry_date' => $data['entry_date'],
                                         'mood' => $data['mood'] ?? null,

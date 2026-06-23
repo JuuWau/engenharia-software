@@ -8,11 +8,12 @@ import {
   Brain,
   Meh,
 } from 'lucide-vue-next'
+import { computed } from 'vue';
 import Button from '@/components/ui/button/Button.vue'
 import Input from '@/components/ui/input/Input.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 
-defineProps<{
+const props = defineProps<{
   selectedDate: string | null
   entry: {
     title: string
@@ -20,6 +21,15 @@ defineProps<{
     mood: string | null
   }
 }>()
+
+const formattedDate = computed(() => {
+  if (!props.selectedDate) return 'Selecione um dia'
+
+  const [year, month, day] = props.selectedDate.split('-')
+
+  return `${day}/${month}/${year}`
+})
+
 const moods = [
   {
     value: 'happy',
@@ -74,28 +84,28 @@ function clearFilters() {
   <div
     class="md:col-span-2 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col shadow-sm"
   >
-    <div class="flex justify-between items-center mb-3">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
       <h2 class="text-sm text-zinc-500">
-        {{ selectedDate || 'Selecione um dia' }}
+        {{ formattedDate }}
       </h2>
-      <div class="flex gap-2">
+
+      <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
         <Button
           variant="outline"
-          class="w-full lg:w-auto"
+          class="w-full sm:w-auto"
           @click="$emit('clear')"
         >
           <FilterX class="mr-2 h-4 w-4" />
-
           Limpar
         </Button>
 
         <Button
           v-if="selectedDate"
           variant="indigo"
-          class="cursor-pointer"
+          class="w-full sm:w-auto"
           @click="$emit('save')"
         >
-          <Save />
+          <Save class="mr-2 h-4 w-4" />
           Salvar
         </Button>
       </div>

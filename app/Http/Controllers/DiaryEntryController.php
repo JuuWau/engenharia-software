@@ -7,11 +7,11 @@ use App\Http\Requests\UpdateDiaryEntryRequest;
 use App\Http\Resources\DiaryEntryResource;
 use App\Models\DiaryEntry;
 use App\Services\DiaryService;
-use AWS\CRT\Log;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class DiaryEntryController extends Controller
@@ -36,7 +36,7 @@ class DiaryEntryController extends Controller
             $entry = $this->diaryService->updateOrCreate(
                 $request->validated()
             );
-
+            
             return response()->json([
                 'message' =>
                 'Seu registro foi salvo com sucesso.',

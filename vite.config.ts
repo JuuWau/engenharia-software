@@ -27,8 +27,31 @@ export default defineConfig({
                 },
             },
         }),
-        wayfinder({
-            formVariants: true,
-        }),
     ],
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        cors: true,
+        hmr: {
+            host: 'localhost',
+            port: 5173,
+        },
+        watch: {
+            usePolling: true,
+            interval: 1000,
+            binaryInterval: 3000,
+        },
+        fs: {
+            strict: false,
+        },
+    },
+    optimizeDeps: {
+        include: ['vue', 'inertia', '@inertiajs/vue3'],
+        exclude: ['@tailwindcss/vite'],
+    },
+    build: {
+        sourcemap: false, 
+        minify: false,
+    },
 });
