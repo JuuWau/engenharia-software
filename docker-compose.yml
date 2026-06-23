@@ -34,18 +34,6 @@ services:
     networks:
       - safevoice-network
 
-  node:
-    image: node:22
-    container_name: safevoice_node_dev
-    working_dir: /var/www/html
-    volumes:
-      - .:/var/www/html
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
-    ports:
-      - "5173:5173"
-    networks:
-      - safevoice-network
-
 networks:
   safevoice-network:
     driver: bridge
